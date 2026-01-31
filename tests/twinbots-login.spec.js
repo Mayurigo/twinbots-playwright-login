@@ -1,35 +1,61 @@
 import { test, expect } from '@playwright/test';
 
-test.setTimeout(0); // disable timeout
+test.setTimeout(0); // No timeout
 
 test.use({
-  browserName: 'chromium', // ONLY chromium
+  channel: 'chrome',
   headless: false,
   launchOptions: {
     args: ['--start-maximized'],
   },
 });
 
-test('Twinbots Login Demo - Stay Open', async ({ page }) => {
+test('Twinbots Login Demo', async ({ page }) => {
 
-  // Go to login page
+  // Open login page
   await page.goto('https://app.is-kool.com/auth/login');
 
-  // VALID LOGIN
+  // ==============================
+  // ✅ VALID LOGIN (ACTIVE)
+  // ==============================
+
   await page.fill('input[type="email"]', 'twinbots.llc@gmail.com');
   await page.fill('input[type="password"]', 'admin@123');
   await page.fill('input[placeholder*="School"]', 'S001');
 
   await page.click('button:has-text("Login")');
 
-  // Confirm login success
+  // Validate login success
   await expect(page).not.toHaveURL(/login/);
 
-  console.log("✅ Login successful");
-  console.log("👉 Browser will NOT close");
-  console.log("👉 Do manual testing");
-  console.log("👉 Close browser yourself when done");
+  console.log("✅ Valid login successful");
 
-  // 🔥 KEEP OPEN FOREVER
+
+  // ==============================
+  // ❌ INVALID LOGIN (COMMENTED)
+  // Uncomment when needed
+  // ==============================
+/*
+  
+  await page.goto('https://app.is-kool.com/auth/login');
+
+  await page.fill('input[type="email"]', 'wrong@gmail.com');
+  await page.fill('input[type="password"]', 'wrong123');
+  await page.fill('input[placeholder*="School"]', 'S999');
+
+  await page.click('button:has-text("Login")');
+
+  // Expect error or still on login page
+  await expect(page).toHaveURL(/login/);
+
+  console.log("✅ Invalid login validation working");
+  */
+
+
+  console.log("👉 Browser will stay open");
+  console.log("👉 Do manual testing");
+  console.log("👉 Close browser to stop");
+
+  //  Stay open forever
   await new Promise(() => {});
 });

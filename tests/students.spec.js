@@ -1,16 +1,14 @@
 import { test, expect } from '@playwright/test';
 
-test.setTimeout(0);
-
 test.use({
-  channel: 'chrome',
-  launchOptions: { 
-    headless: false, 
-    args: ['--start-maximized'] 
-  }
+  browserName: 'chromium',
+  headless: false,
+  launchOptions: {
+    args: ['--start-maximized'],
+  },
 });
 
-test('Classes Module - BDD Manual Flow', async ({ page }) => {
+test('Students Module - BDD Flow', async ({ page }) => {
 
   // =========================
   // ✅ GIVEN
@@ -24,7 +22,7 @@ test('Classes Module - BDD Manual Flow', async ({ page }) => {
   // =========================
   // ✅ WHEN (Login)
   // =========================
-  console.log("WHEN: User enters credentials");
+  console.log("WHEN: User logs in");
 
   await page.fill('input[type="email"]', 'twinbots.llc@gmail.com');
   await page.fill('input[type="password"]', 'admin@123');
@@ -36,12 +34,10 @@ test('Classes Module - BDD Manual Flow', async ({ page }) => {
   // =========================
   // ✅ THEN (Login success)
   // =========================
-  console.log("THEN: Login should succeed");
+  console.log("THEN: Login successful");
 
   await expect(page).not.toHaveURL(/login/);
   await page.waitForLoadState('networkidle');
-
-  console.log("✅ Login successful");
 
 
   // =========================
@@ -50,18 +46,18 @@ test('Classes Module - BDD Manual Flow', async ({ page }) => {
   console.log("WHEN: User clicks Menu");
 
   await page.getByText('Menu').click();
+
   await expect(page.getByText('Menu')).toBeVisible();
 
 
   // =========================
-  // 🔥 MANUAL STEP
+  // ✅ MANUAL STEP
   // =========================
-  console.log("👉 Now manually click: Classes");
-  console.log("🛑 Close browser to stop test");
-
+  console.log("👉 Now YOU click 'Students' manually");
+  console.log("Browser will stay open...");
 
   // =========================
-  // 🔥 KEEP OPEN
+  // 🔥 KEEP BROWSER OPEN
   // =========================
   await new Promise(() => {});
 });

@@ -1,6 +1,6 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test.setTimeout(0); // No timeout at all
+test.setTimeout(0); // No timeout
 
 test.use({
   channel: 'chrome',
@@ -10,29 +10,59 @@ test.use({
   },
 });
 
-test('Twinbots Admin - Login and Wait (Manual Navigation)', async ({ page }) => {
+test('Subjects Module - BDD Manual Flow', async ({ page }) => {
 
-  // 1️⃣ Open Login Page
-  await page.goto('https://app.is-kool.com/auth/login', {
-    waitUntil: 'domcontentloaded',
-  });
+  // =========================
+  // ✅ GIVEN
+  // =========================
+  console.log("GIVEN: User is on login page");
 
-  // 2️⃣ Login
+  await page.goto('https://app.is-kool.com/auth/login');
+  await expect(page).toHaveURL(/login/);
+
+
+  // =========================
+  // ✅ WHEN (Login)
+  // =========================
+  console.log("WHEN: User enters credentials");
+
   await page.fill('input[type="email"]', 'twinbots.llc@gmail.com');
   await page.fill('input[type="password"]', 'admin@123');
   await page.fill('input[placeholder*="School"]', 'S001');
+
   await page.click('button:has-text("Login")');
 
-  // 3️⃣ Wait for dashboard
+
+  // =========================
+  // ✅ THEN (Login success)
+  // =========================
+  console.log("THEN: Login should succeed");
+
+  await expect(page).not.toHaveURL(/login/);
   await page.waitForLoadState('networkidle');
 
-  console.log('✅ Logged in successfully');
-  console.log('👉 You can now manually:');
-  console.log('   • Click Menu');
-  console.log('   • Click Subjects');
-  console.log('   • Explore any module');
-  console.log('🛑 Close browser manually to stop test');
+  console.log("✅ Login successful");
 
-  // 🔒 KEEP BROWSER OPEN FOREVER
+
+  // =========================
+  // ✅ WHEN (Open Menu)
+  // =========================
+  console.log("WHEN: User clicks Menu");
+
+  await page.getByText('Menu').click();
+  await expect(page.getByText('Menu')).toBeVisible();
+
+
+  // =========================
+  // 🔥 MANUAL STEP
+  // =========================
+  console.log("👉 Now manually click: Subjects");
+  console.log("👉 Explore the Subjects module");
+  console.log("🛑 Close browser to stop test");
+
+
+  // =========================
+  // 🔒 KEEP OPEN FOREVER
+  // =========================
   await new Promise(() => {});
 });

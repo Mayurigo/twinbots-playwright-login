@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.setTimeout(0);
 
@@ -10,26 +10,58 @@ test.use({
   },
 });
 
-test('Twinbots Admin - Stop at Menu and Wait for Manual Navigation', async ({ page }) => {
+test('Instructor Attendance - Manual Flow', async ({ page }) => {
 
-  // Go to Login page
-  await page.goto('https://app.is-kool.com/auth/login', { waitUntil: 'domcontentloaded' });
+  // =========================
+  // ✅ GIVEN
+  // =========================
+  console.log("GIVEN: User is on login page");
 
-  // Login
+  await page.goto('https://app.is-kool.com/auth/login');
+  await expect(page).toHaveURL(/login/);
+
+
+  // =========================
+  // ✅ WHEN (Login)
+  // =========================
+  console.log("WHEN: User enters credentials");
+
   await page.fill('input[type="email"]', 'twinbots.llc@gmail.com');
   await page.fill('input[type="password"]', 'admin@123');
   await page.fill('input[placeholder*="School"]', 'S001');
+
   await page.click('button:has-text("Login")');
 
-  // Wait for Dashboard/Menu to load
+
+  // =========================
+  // ✅ THEN (Login success)
+  // =========================
+  console.log("THEN: Login should succeed");
+
+  await expect(page).not.toHaveURL(/login/);
   await page.waitForLoadState('networkidle');
 
-  console.log("Logged in successfully.");
-  console.log("Now you are on Menu page.");
-  console.log("Manually click: Menu → Staff Attendance");
-  console.log("You control navigation now.");
-  console.log("Close browser window to stop test.");
+  console.log("✅ Login successful");
 
-  // Stay open forever until YOU close browser
+
+  // =========================
+  // ✅ WHEN (Open Menu only)
+  // =========================
+  console.log("WHEN: User clicks Menu");
+
+  await page.getByText('Menu').click();
+  await expect(page.getByText('Menu')).toBeVisible();
+
+
+  // =========================
+  // 🔥 MANUAL STEP
+  // =========================
+  console.log("👉 Now manually click: Instructor Attendance");
+  console.log("🛑 Close browser to stop test");
+
+
+  // =========================
+  // 🔥 KEEP OPEN
+  // =========================
   await new Promise(() => {});
 });
